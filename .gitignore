@@ -125,6 +125,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+.idea
+*.iml
 .idea/$PRODUCT_WORKSPACE_FILE$
 .idea/.gitignore
 .idea/compiler.xml
@@ -134,3 +136,4 @@ dmypy.json
 .idea/modules.xml
 .idea/tutorial.iml
 .idea/vcs.xml
+.idea/sonarlint/
