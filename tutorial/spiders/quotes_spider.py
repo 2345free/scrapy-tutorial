@@ -1,5 +1,7 @@
 import scrapy
 
+from tutorial.items import TutorialItem
+
 
 class QuotesSpider(scrapy.Spider):
     name = "quotes"
@@ -21,12 +23,21 @@ class QuotesSpider(scrapy.Spider):
     # 入口写法2
     start_urls = [
         'http://quotes.toscrape.com/page/1/',
-        'http://quotes.toscrape.com/page/2/',
+        # 'http://quotes.toscrape.com/page/2/',
     ]
 
     def parse(self, response):
-        page = response.url.split("/")[-2]
-        filename = 'quotes-%s.html' % page
-        with open(filename, 'wb') as f:
-            f.write(response.body)
-        self.log('Saved file %s' % filename)
+        for quote in response.css('div.quote'):
+            text = quote.css('span.text::text').get()
+            author = quote.css('small.author::text').get()
+            tags = quote.css('div.tags a.tag::text').getall()
+            yield TutorialItem(text=text, author=author, tags=tags)
+
+        # 获取下一页
+        next_page = response.css('li.next a::attr(href)').get()
+        if next_page is not None:
+            # 使用该urljoin()方法构建完整的绝对URL （因为链接可以是相对的）
+            # next_page = response.urljoin(next_page)
+            # yield Request(next_page, callback=self.parse)
+            # 创建请求的捷径,直接支持相对URL-无需调用urljoin
+            yield response.follow(next_page, callback=self.parse)
