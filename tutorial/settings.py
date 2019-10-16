@@ -65,7 +65,8 @@ ROBOTSTXT_OBEY = True
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'tutorial.pipelines.TutorialPipeline': 300,
-    'tutorial.pipelines.JsonWriterPipeline': 800,
+    # 'tutorial.pipelines.JsonWriterPipeline': 310,
+    'tutorial.pipelines.MongoPipeline': 320,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -88,3 +89,7 @@ ITEM_PIPELINES = {
 # HTTPCACHE_DIR = 'httpcache'
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+# diy
+MONGO_URI = 'mongodb://localhost:27017'
+MONGO_DATABASE = 'tutorial'
