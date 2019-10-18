@@ -65,7 +65,7 @@ class ScreenshotPipeline(object):
     """Pipeline that uses Splash to render screenshot of
     every Scrapy item."""
 
-    SPLASH_URL = "http://localhost:8050/render.png?url={}"
+    SPLASH_URL = "http://localhost:8050/render.png?url={}&render_all=1&wait=0.5"
 
     def process_item(self, item, spider):
         encoded_item_url = quote(item["url"])

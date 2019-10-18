@@ -16,3 +16,4 @@ class TutorialItem(scrapy.Item):
     author = scrapy.Field()
     tags = scrapy.Field()
     url = scrapy.Field()
+    screenshot_filename = scrapy.Field()
