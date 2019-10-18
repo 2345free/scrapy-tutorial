@@ -31,7 +31,8 @@ class QuotesSpider(scrapy.Spider):
             text = quote.css('span.text::text').get()
             author = quote.css('small.author::text').get()
             tags = quote.css('div.tags a.tag::text').getall()
-            yield TutorialItem(text=text, author=author, tags=tags)
+            url = response.url
+            yield TutorialItem(text=text, author=author, tags=tags, url=url)
 
         # 获取下一页
         next_page = response.css('li.next a::attr(href)').get()
