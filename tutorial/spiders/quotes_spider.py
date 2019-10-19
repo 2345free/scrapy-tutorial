@@ -26,6 +26,11 @@ class QuotesSpider(scrapy.Spider):
         # 'http://quotes.toscrape.com/page/2/',
     ]
 
+    # 覆盖全局设置
+    custom_settings = {
+        "COOKIES_ENABLED": True
+    }
+
     def parse(self, response):
         for quote in response.css('div.quote'):
             text = quote.css('span.text::text').get()
