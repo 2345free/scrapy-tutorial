@@ -6,8 +6,10 @@
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 import hashlib
 import json
+import logging
 from urllib.parse import quote
 
+import mysql.connector
 import pymongo
 import scrapy
 
@@ -31,6 +33,7 @@ class JsonWriterPipeline(object):
     def process_item(self, item, spider):
         line = json.dumps(dict(item)) + "\n"
         self.file.write(line)
+        logging.log(logging.INFO, 'item:%s', item)
         return item
 
 
@@ -89,4 +92,35 @@ class ScreenshotPipeline(object):
 
         # Store filename in item.
         item["screenshot_filename"] = filename
+        return item
+
+
+class MySQLPipeline(object):
+
+    def __init__(self, config):
+        # self.db = MySQLdb.connect(**config)
+        self.cnx = mysql.connector.connect(**config)
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        config = {
+            "host": crawler.settings.get('MYSQL_HOST'),
+            "port": crawler.settings.get('MYSQL_PORT'),
+            "db": crawler.settings.get('MYSQL_DB'),
+            "user": crawler.settings.get('MYSQL_USER'),
+            "passwd": crawler.settings.get('MYSQL_PASSWD'),
+            "use_unicode": True,
+            "charset": 'utf8',
+        }
+        return cls(config)
+
+    def open_spider(self, spider):
+        pass
+
+    def close_spider(self, spider):
+        # self.db.close()
+        self.cnx.close()
+
+    def process_item(self, item, spider):
+        logging.log(logging.INFO, 'item:%s', item)
         return item

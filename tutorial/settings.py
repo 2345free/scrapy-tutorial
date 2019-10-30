@@ -20,6 +20,8 @@ NEWSPIDER_MODULE = 'tutorial.spiders'
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
+LOG_LEVEL = 'INFO'
+
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
 
@@ -67,7 +69,8 @@ ITEM_PIPELINES = {
     # 'tutorial.pipelines.TutorialPipeline': 300,
     # 'tutorial.pipelines.JsonWriterPipeline': 310,
     # 'tutorial.pipelines.MongoPipeline': 320,
-    'tutorial.pipelines.ScreenshotPipeline': 400,
+    # 'tutorial.pipelines.ScreenshotPipeline': 400,
+    'tutorial.pipelines.MySQLPipeline': 410,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -91,6 +94,13 @@ AUTOTHROTTLE_DEBUG = False
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-# diy
+# mysql
+MYSQL_HOST = '127.0.0.1'
+MYSQL_PORT = 3306
+MYSQL_DB = 'test'
+MYSQL_USER = 'test'
+MYSQL_PASSWD = 'test'
+
+# mongo
 MONGO_URI = 'mongodb://localhost:27017'
 MONGO_DATABASE = 'tutorial'
