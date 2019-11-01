@@ -9,7 +9,7 @@ import json
 import logging
 from urllib.parse import quote
 
-import mysql.connector
+import MySQLdb
 import pymongo
 import scrapy
 
@@ -98,8 +98,8 @@ class ScreenshotPipeline(object):
 class MySQLPipeline(object):
 
     def __init__(self, config):
-        # self.db = MySQLdb.connect(**config)
-        self.cnx = mysql.connector.connect(**config)
+        self.conn = MySQLdb.connect(**config)
+        self.cursor = self.conn.cursor()
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -118,9 +118,13 @@ class MySQLPipeline(object):
         pass
 
     def close_spider(self, spider):
-        # self.db.close()
-        self.cnx.close()
+        self.cursor.close()
+        self.conn.close()
 
     def process_item(self, item, spider):
-        logging.log(logging.INFO, 'item:%s', item)
-        return item
+        # logging.log(logging.INFO, 'item:%s', item)
+        sql = """
+        insert into quotes(text,author,tags) values(%s,%s,%s)
+        """
+        self.cursor.execute(sql, (item['text'], item['author'], item.get('tags', None)))
+        self.conn.commit()

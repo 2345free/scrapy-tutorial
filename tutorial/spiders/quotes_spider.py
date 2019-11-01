@@ -1,6 +1,6 @@
 import scrapy
 
-from tutorial.items import TutorialItem
+from tutorial.items import TutorialItem, ArticleItemLoader
 
 
 class QuotesSpider(scrapy.Spider):
@@ -32,12 +32,15 @@ class QuotesSpider(scrapy.Spider):
     }
 
     def parse(self, response):
+        # 解析目录
         for quote in response.css('div.quote'):
-            text = quote.css('span.text::text').get()
-            author = quote.css('small.author::text').get()
-            tags = quote.css('div.tags a.tag::text').getall()
-            url = response.url
-            yield TutorialItem(text=text, author=author, tags=tags, url=url)
+            item_loader = ArticleItemLoader(item=TutorialItem(), selector=quote)
+            item_loader.add_css('text', 'span.text::text')
+            item_loader.add_css('author', 'small.author::text')
+            item_loader.add_css('tags', 'div.tags a.tag::text')
+            item_loader.add_value('url', response.url)
+            item = item_loader.load_item()
+            yield item
 
         # 获取下一页
         next_page = response.css('li.next a::attr(href)').get()
